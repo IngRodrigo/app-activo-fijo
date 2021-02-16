@@ -1,0 +1,72 @@
+<resources>
+    <string name="app_name">Activo Fijo</string>
+
+    <!--Varios Activities-->
+    <string name="btn_volver">Volver</string>
+    <string name="vacio"></string>
+    <string name="btn_Registrar">Registrar</string>
+    <string name="btn_Limpiar">Limpiar</string>
+
+
+    <!--Login-->
+    <string name="img_burger">Auditoria</string>
+    <string name="txt_user">Usuario</string>
+    <string name="txt_password">Contraseña</string>
+    <string name="btn_ingresar">Ingresar</string>
+    <string name="btn_registrarse">Registrarse</string>
+
+
+    <!--Registro de Usuarios-->
+    <string name="lb_registro">Registro de Usuarios</string>
+    <string name="txt_usuarioCedula">Cedula</string>
+    <string name="txt_usuarioRegistro">Usuario</string>
+    <string name="txt_passwordRegistro">Contraseña</string>
+    <string name="txt_passwordRegistro2">Repita Contraseña</string>
+
+
+
+    <!--Iniciar-->
+    <string name="btn_ActualizarColector">Actualizar Colector</string>
+    <string name="btn_IniciarInventario">Iniciar Inventario</string>
+    <string name="btn_Reportes">Generar Reporte</string>
+    <string name="btn_cerrarSesion">Cerrar Sesión</string>
+
+
+
+    <!--Update Colector Activity-->
+    <string name="lbActualizando"></string>
+    <string name="txt_numCompanhia">Nº de Compañía</string>
+    <string name="btn_Actualizar">Actualizar</string>
+    <string name="lb_otrasOpciones">Otras Opciones</string>
+    <string name="btn_vaciarColector">Vaciar Colector</string>
+
+
+
+    <!--Principal-->
+    <string name="txt_NombreAuditoria">Nombre de la Auditoria</string>
+    <string name="btn_Iniciar">Iniciar</string>
+
+
+
+    <!--Colector-->
+    <string name="colector_txtNumChapa">Nº de Chapa</string>
+    <string name="lbExisteUsuario">Usuario: </string>
+    <string name="lbExisteCompanhia">Compañía: </string>
+    <string name="lbExisteNumChapa">Num Chapa: </string>
+    <string name="lbExisteNumActivo">Num Activo: </string>
+    <string name="lbExisteDescripcion">Descripción: </string>
+    <string name="lbExisteUbicacion">Ubicación: </string>
+
+
+
+    <!--Registrar Activo-->
+    <string name="tituloRegistrar">Registrar Activo</string>
+    <string name="txtNumCompa">Nº de Compañía</string>
+    <string name="txtNumChapa">Nº de Chapa</string>
+    <string name="txtDescripcion">Descripción</string>
+    <string name="txtUbicacion">Ubicación</string>
+    <string name="txtUsuario">Usuario Asignado</string>
+    <string name="txtAuditoria">Auditoria</string>
+
+
+</resources>
