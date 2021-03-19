@@ -1,8 +1,10 @@
 package bk.sercon.ajvierci.activofijo;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -20,14 +22,13 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+
+import bk.sercon.ajvierci.activofijo.globales.Globales;
+import bk.sercon.ajvierci.activofijo.globales.MovimientosDB;
 
 
 public class Colectar extends AppCompatActivity {
@@ -44,13 +45,15 @@ public class Colectar extends AppCompatActivity {
 
     SoundPool sp; // audio file
     int sonido_rep = 0;
-
-
+    private SharedPreferences prefrences;
+    private AdminSQLiteOpenHelper admin;
+    private SQLiteDatabase BaseDeDatos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_colectar);
         conectarConVista();
+        setPreferences();
         //Variables para los EditText
         //******************************************************************************
         txtNumCompa = (EditText) findViewById(R.id.txtExisteCom);
@@ -113,7 +116,9 @@ public class Colectar extends AppCompatActivity {
         sonido_rep = sp.load(this, R.raw.noencontrado, 1);
 
     }
-
+    private SharedPreferences setPreferences(){
+        return prefrences=getSharedPreferences("usuario", Context.MODE_PRIVATE);
+    }
     private void conectarConVista() {
         capturarParametrosExtra();
         txt_auditoria = (EditText) findViewById(R.id.txt_auditoria);
@@ -202,63 +207,55 @@ public class Colectar extends AppCompatActivity {
                 txtUser.setText(fila.getString(5));
 
                 if (MovimientosDB.activoTrabajando(admin, numActivo)) {
-                    Toast.makeText(getApplicationContext(), "El activo esta funcionando", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), "El activo no se encuentra en funcionamiento", Toast.LENGTH_SHORT).show();
+                    procesar(chapita, audi, sucu);
+                } else if(MovimientosDB.activoRegistradoTrabajando(admin, chapita)) {
+                        procesar(chapita, audi, sucu);
+                }else{
+                    Toast.makeText(getApplicationContext(), "El activo no se encuentra en disponible para inventariar", Toast.LENGTH_SHORT).show();
+
                 }
             }
 
             vistaExistente.setVisibility(View.VISIBLE);
 
-
-            // Actualizando ACTIVO
-            //************************************************************************************************
-
-            // Session class instance
-            session = new UserSessionManager(getApplicationContext());
-            //TextView lbName = (TextView) findViewById(R.id.lbName);
-
-            // Check user login
-            // If User is not logged in , This will redirect user to LoginActivity.
-            if (session.checkLogin())
-                finish();
-
-            // get user data from session
-            HashMap<String, String> user = session.getUserDetails();
-            // get name
-            String name = user.get(UserSessionManager.KEY_NAME);
-
-            //fecha del sistema
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyy-HH:mm:ss", Locale.getDefault());
-            Date date = new Date();
-            String fecha = dateFormat.format(date);
-
-            String pick = "SI";
-
-            //******************************************************************************
-            ContentValues registro = new ContentValues();
-
-            registro.put("user", name);
-            registro.put("fechaPick", fecha);
-            registro.put("nombreAuditoria", audi);
-            registro.put("sucursal", sucu);
-            registro.put("pick", pick);
-
-
-            int cantidad = BaseDeDatos.update("activos", registro, "numChapa=" + chapita, null);
-
-            if (cantidad == 1) {
-                Toast.makeText(this, "Activo Leído y Registrado", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "El Activo no existe", Toast.LENGTH_SHORT).show();
-            }
         }
 
         BaseDeDatos.close();
     }
 
-    private AdminSQLiteOpenHelper admin;
-    private SQLiteDatabase BaseDeDatos;
+    private void procesar(String chapita, String audi, String sucu) {
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "activo_fijo", null, 1);
+        BaseDeDatos = admin.getWritableDatabase();
+        String name = Globales.cargarUsuarioPreference(setPreferences());
+
+        //fecha del sistema
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyy-HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        String fecha = dateFormat.format(date);
+
+        String pick = "SI";
+
+        //******************************************************************************
+        ContentValues registro = new ContentValues();
+
+        registro.put("user", name);
+        registro.put("fechaPick", fecha);
+        registro.put("nombreAuditoria", audi);
+        registro.put("sucursal", sucu);
+        registro.put("pick", pick);
+
+
+        int cantidad = BaseDeDatos.update("activos", registro, "numChapa=" + chapita, null);
+
+
+        if (cantidad == 1) {
+            if(MovimientosDB.comprobarEstadoActivo(admin, chapita)){
+                Toast.makeText(this, "Activo Leído y Registrado", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
 
 
     public void registrarActivo(String numChapa, String auditoria, String sucursal) {

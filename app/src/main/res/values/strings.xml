@@ -24,13 +24,11 @@
     <string name="txt_passwordRegistro2">Repita Contraseña</string>
 
 
-
     <!--Iniciar-->
     <string name="btn_ActualizarColector">Actualizar Colector</string>
     <string name="btn_IniciarInventario">Iniciar Inventario</string>
     <string name="btn_Reportes">Generar Reporte</string>
     <string name="btn_cerrarSesion">Cerrar Sesión</string>
-
 
 
     <!--Update Colector Activity-->
@@ -41,11 +39,9 @@
     <string name="btn_vaciarColector">Vaciar Colector</string>
 
 
-
     <!--Principal-->
     <string name="txt_NombreAuditoria">Nombre de la Auditoria</string>
     <string name="btn_Iniciar">Iniciar</string>
-
 
 
     <!--Colector-->
@@ -56,7 +52,6 @@
     <string name="lbExisteNumActivo">Num Activo: </string>
     <string name="lbExisteDescripcion">Descripción: </string>
     <string name="lbExisteUbicacion">Ubicación: </string>
-
 
 
     <!--Registrar Activo-->

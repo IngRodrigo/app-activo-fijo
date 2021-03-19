@@ -1,4 +1,4 @@
-package bk.sercon.ajvierci.activofijo;
+package bk.sercon.ajvierci.activofijo.globales;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+
+import bk.sercon.ajvierci.activofijo.Activo;
+import bk.sercon.ajvierci.activofijo.AdminSQLiteOpenHelper;
 
 public class MovimientosDB {
     private static AdminSQLiteOpenHelper conexion;
@@ -84,7 +87,9 @@ public class MovimientosDB {
         try {
             bd = conexion.getReadableDatabase();
             listaActivos = new ArrayList<>();
-            Cursor cursor = bd.rawQuery("Select * from activos where estado='WK' and numActivo='"+numActivo+"'", null);
+            String sql="Select * from activos where estado='WK' and numActivo='"+numActivo+"'";
+            Globales.EscribirLog("SQL: ", "Consulta a ejecutar: "+sql+" Time:"+Globales.fechaHoraMinutoSegundoActual());
+            Cursor cursor = bd.rawQuery(sql, null);
             if(cursor.moveToFirst()){
                 resultado=true;
             }else{
@@ -92,6 +97,42 @@ public class MovimientosDB {
             }
         } catch (Exception e) {
 
+        }
+        return resultado;
+    }
+    public static boolean activoRegistradoTrabajando(AdminSQLiteOpenHelper conexion, String numChapa) {
+        try {
+            bd = conexion.getReadableDatabase();
+            listaActivos = new ArrayList<>();
+            String sql="Select * from activos where estado='WK' and numChapa='"+numChapa+"'";
+            Globales.EscribirLog("SQL: ", "Consulta a ejecutar: "+sql+" Time:"+Globales.fechaHoraMinutoSegundoActual());
+            Cursor cursor = bd.rawQuery(sql, null);
+            if(cursor.moveToFirst()){
+                resultado=true;
+            }else{
+                resultado=false;
+            }
+        } catch (Exception e) {
+
+        }
+        return resultado;
+    }
+    public static boolean comprobarEstadoActivo(AdminSQLiteOpenHelper conexion, String chapita) {
+        try {
+            bd = conexion.getReadableDatabase();
+            String sql="SELECT * FROM activos WHERE registrado ='SI' and numChapa='"+chapita+"'";
+
+            Globales.EscribirLog("SQL: ", "Consulta a ejecutar: "+sql+" Time:"+Globales.fechaHoraMinutoSegundoActual());
+
+            Cursor cursor = bd.rawQuery(sql, null);
+            if(cursor.moveToFirst()){
+                resultado=true;
+            }else{
+                resultado=false;
+            }
+        } catch (Exception e) {
+            System.out.println("No se pudo realizar la consulta del estado del activo a causa de: "+e);
+            Globales.EscribirLog("ERROR","No se pudo realizar la consulta del estado del activo a causa de: "+e);
         }
         return resultado;
     }

@@ -1,6 +1,8 @@
 package bk.sercon.ajvierci.activofijo;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -9,25 +11,51 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.HashMap;
+
 public class LoginActivity extends AppCompatActivity {
 
     private EditText txtUsername, txtPassword;
 
-    // User Session Manager Class
-    UserSessionManager session;
-
-
+    private SharedPreferences prefrences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        // User Session Manager
-        session = new UserSessionManager(getApplicationContext());
-
-        // get Email, Password input text
+        setPreferences();
         txtUsername = (EditText) findViewById(R.id.txtUserName);
         txtPassword = (EditText) findViewById(R.id.txtPassword);
+        cargarPreferencias();
+    }
+    private void setPreferences(){
+        prefrences=getSharedPreferences("usuario", Context.MODE_PRIVATE);
+    }
+    private void guardarPreferencias(String usuario){
+            SharedPreferences.Editor editor= prefrences.edit();
+            editor.putString("name_user", usuario);
+            editor.putString("recordar","si");
+            editor.apply();
+            System.out.println("se guardo");
+    }
+    private void cargarPreferencias(){
+        SharedPreferences preferences=getSharedPreferences("usuario", Context.MODE_PRIVATE);
+
+        String recordar=preferences.getString("recordar","no");
+        if(recordar.equals("si")){
+            ir_Principal();
+
+        }else{
+           // EscribirLog.EscribirLog(EscribirLog.fechaHoraMinutoSegundoActual()+": Error de logueo: ", "La sessión del usuario no esta guardada a petición del mismo.");
+            System.out.println("no");
+        }
+    }
+    private void ir_Principal() {
+        // Starting Principal
+        Intent i = new Intent(getApplicationContext(), Principal.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        startActivity(i);
+        finish();
     }
 
     public void Login (View view){
@@ -53,17 +81,8 @@ public class LoginActivity extends AppCompatActivity {
                 else{
                     Toast.makeText(this, "Datos Correctos", Toast.LENGTH_SHORT).show();
 
-                    // Creating user login session
-                    session.createUserLoginSession(username);
-
-                    // Starting Principal
-                    Intent i = new Intent(getApplicationContext(), Principal.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                    // Add new Flag to start new Activity
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(i);
-                    finish();
+                    guardarPreferencias(username);
+                    ir_Principal();
                 }
 
             }else{

@@ -115,6 +115,8 @@ public class RegistrarActivo extends AppCompatActivity {
                     registro.put("sucursal", companhia);
                     registro.put("pick", pick);
                     registro.put("registrado", registrado);
+                    registro.put("estado", "WK");
+                    registro.put("descEstado","Working");
 
                     BaseDeDatos.insert("activos", null, registro);
                     BaseDeDatos.close();

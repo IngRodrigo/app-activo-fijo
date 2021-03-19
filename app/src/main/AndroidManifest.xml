@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="bk.sercon.ajvierci.activofijo">
-
     <!-- the internet permission -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -15,6 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".Acceso">
+        </activity>
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +28,7 @@
         <activity android:name=".RegistrarActivo" />
         <activity android:name=".Colectar" />
         <activity android:name=".Principal" />
-        <activity android:name=".IniciarActivity"></activity>
+        <activity android:name=".IniciarActivity" />
     </application>
 
 </manifest>

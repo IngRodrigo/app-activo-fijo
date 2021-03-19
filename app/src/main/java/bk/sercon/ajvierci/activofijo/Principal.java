@@ -1,7 +1,9 @@
 package bk.sercon.ajvierci.activofijo;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -23,6 +25,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
+import bk.sercon.ajvierci.activofijo.globales.Globales;
+
 
 public class Principal extends AppCompatActivity {
 
@@ -32,29 +36,16 @@ public class Principal extends AppCompatActivity {
 
     private Button btn_csv;
 
+    private SharedPreferences prefrences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
-
-        //Nombre de Usuario
-        //******************************************************************************
-        lbName = (TextView) findViewById(R.id.lbName);
-
-        // Session class instance
-        session = new UserSessionManager(getApplicationContext());
-
-        // Check user login
-        // If User is not logged in , This will redirect user to LoginActivity.
-        if(session.checkLogin())
-            finish();
-
-        // get user data from session
-        HashMap<String, String> user = session.getUserDetails();
-        // get name
-        String name = user.get(UserSessionManager.KEY_NAME);
+        setPreferences();
         // Show user data on activity
-        lbName.setText(Html.fromHtml("Hola: <b>" + name + "</b>"));
+        String name= Globales.cargarUsuarioPreference(setPreferences());
+        this.lbName=findViewById(R.id.lbName);
+        this.lbName.setText(Html.fromHtml("Hola: <b>" + name + "</b>"));
 
 
 
@@ -73,7 +64,9 @@ public class Principal extends AppCompatActivity {
                                  }
         );
     }
-
+    private SharedPreferences setPreferences(){
+        return prefrences=getSharedPreferences("usuario", Context.MODE_PRIVATE);
+    }
 
 
     public void actualizarColector(View view){
@@ -176,8 +169,12 @@ public class Principal extends AppCompatActivity {
         builder.setPositiveButton("SI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                session.logoutUser();
-                finish();
+
+                        if(Globales.cerrarSesion(setPreferences())){
+                            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
             }
         });
 
@@ -190,5 +187,16 @@ public class Principal extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void enviarAlLogin() {
+        // Starting Principal
+        Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        // Add new Flag to start new Activity
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
+        finish();
     }
 }

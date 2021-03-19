@@ -30,6 +30,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import bk.sercon.ajvierci.activofijo.globales.Globales;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -92,6 +93,7 @@ public class UpdateColector extends AppCompatActivity {
 
             //actualizando las sucursales
           // updateSucursales(num);
+            Globales.EscribirLog("OK","Iniciando proceso de traer compañias... Time:"+Globales.fechaHoraMinutoSegundoActual());
             new TareaCompanias(true).execute(numCom);
             //Actuliza los Activos en el Dispositivo
            //updateActivos(num);
@@ -276,9 +278,6 @@ public class UpdateColector extends AppCompatActivity {
         finish();
     }
 
-
-
-
     //rodrigo_dev
     class TareaActivos extends AsyncTask<String, Void, String>{
 
@@ -332,6 +331,7 @@ public class UpdateColector extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Globales.EscribirLog("OK","Proceso de descarga de activos finalizado. Time: "+Globales.fechaHoraMinutoSegundoActual());
             if(s.equals("exito")){
                 progreso.setVisibility(View.INVISIBLE);
                 lbMensaje.setText("");
@@ -384,6 +384,7 @@ public class UpdateColector extends AppCompatActivity {
                 //
 
             }catch (Exception e){
+                System.out.println("Erro en la consulta");
                 System.out.println(e);
             }
 
@@ -395,9 +396,11 @@ public class UpdateColector extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Globales.EscribirLog("OK","Proceso de descarga de compañias finalizado. Time: "+Globales.fechaHoraMinutoSegundoActual());
             if(s.equals("exito")){
                 numCom = txt_NumCompanhia.getText().toString().trim();
                 int num = Integer.parseInt(numCom);
+                Globales.EscribirLog("OK","Proceso de descarga de activos iniciado. Time: "+Globales.fechaHoraMinutoSegundoActual());
                 new TareaActivos(true).execute(numCom);
             }else{
                 progreso.setVisibility(View.INVISIBLE);
@@ -451,8 +454,8 @@ public class UpdateColector extends AppCompatActivity {
         int respuesta=0;
         ArrayList<String>jsonR= new ArrayList<>();
         try{
-              //  url=new URL("http://webapp2.ajvierci.com.py/appactivofijo/api/sucursales.php?cia="+cia);
-            url=new URL("http://webapp2.ajvierci.com.py/appactivofijo/api/activos.php?cia="+cia);
+                url=new URL("http://192.168.12.46:8080/api-activo-fijo/activos.php?cia="+cia);
+            //url=new URL("http://webapp2.ajvierci.com.py/appactivofijo/api/activos.php?cia="+cia);
             HttpURLConnection connection=(HttpURLConnection)url.openConnection();
             respuesta=connection.getResponseCode();
             resul=new StringBuilder();
@@ -466,9 +469,11 @@ public class UpdateColector extends AppCompatActivity {
 
             }else{
                 System.out.println("Error codigo respuesta: "+respuesta);
+                Globales.EscribirLog("ERROR","Error codigo respuesta no valido: "+respuesta);
             }
         }catch (Exception e){
             System.out.println("Error= " + e.toString());
+            Globales.EscribirLog("ERROR","Error al intentar descargar los activos: "+e);
         }
     return resul.toString();
     }
@@ -484,8 +489,8 @@ public class UpdateColector extends AppCompatActivity {
         int respuesta=0;
         ArrayList<String>jsonR= new ArrayList<>();
         try{
-              url=new URL("http://webapp2.ajvierci.com.py/appactivofijo/api/sucursales.php?cia="+cia);
-            //url=new URL("http://webapp2.ajvierci.com.py/appactivofijo/api/activos.php?cia="+cia);
+              //url=new URL("http://webapp2.ajvierci.com.py/appactivofijo/api/sucursales.php?cia="+cia);
+            url=new URL("http://192.168.12.46:8080/api-activo-fijo/sucursales.php?cia="+cia);
             HttpURLConnection connection=(HttpURLConnection)url.openConnection();
             respuesta=connection.getResponseCode();
             resul=new StringBuilder();
